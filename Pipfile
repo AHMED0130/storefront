@@ -13,6 +13,8 @@ drf-nested-routers = "*"
 mysqlclient = "*"
 pillow = "*"
 django-cors-headers = "*"
+pytest = "*"
+pytest-django = "*"
 
 [dev-packages]
 
