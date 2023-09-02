@@ -22,4 +22,5 @@ class TestCollectionGet:
         client=APIClient()
         response=client.get('/store/collections/')
         response.status_code==status.HTTP_200_OK
+        
 
