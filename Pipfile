@@ -5,16 +5,14 @@ name = "pypi"
 
 [packages]
 django = "*"
-djoser = "*"
 djangorestframework = "*"
-django-filter = "*"
+djoser = "*"
 django-debug-toolbar = "*"
-drf-nested-routers = "*"
-mysqlclient = "*"
-pillow = "*"
+djangorestframework-simplejwt = "*"
+django-filter = "*"
 django-cors-headers = "*"
-pytest = "*"
-pytest-django = "*"
+drf-nested-routers = "*"
+pillow = "*"
 
 [dev-packages]
 locust = "*"
