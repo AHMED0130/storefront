@@ -3,10 +3,9 @@ RUN addgroup app && adduser -S -G app app
 USER app
 WORKDIR /app
 COPY  pipfile pipfile.lock   /app/
-
-
+RUN pip install pipenv
 RUN pipenv install 
-
 EXPOSE 8000
+COPY . /app/
 RUN python manage.py migrate
-CMD ["python", "manage.py", "runserver", "172.0.0.1:8000"]
+CMD ["python", "manage.py", "runserver"]
