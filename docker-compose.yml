@@ -1,0 +1,38 @@
+services:
+  db:
+    container_name: db
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+    ports:
+      - "3306:3306"
+
+  web:
+    image: store-app
+    volumes:
+      - storedb:/var/lib/mysql
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DB_NAME: db
+      DB_USER: root
+      DB_PASSWORD: 12345678
+      DB_HOST: db
+      DB_PORT: 3306
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - "8080:8080"
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: 12345678
+    
+    
+volumes:
+  storedb:
+   
