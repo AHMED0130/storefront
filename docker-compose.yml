@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     container_name: db
@@ -6,33 +8,32 @@ services:
       MYSQL_ROOT_PASSWORD: 12345678
     ports:
       - "3306:3306"
-
-  web:
-    image: store-app
     volumes:
-      - storedb:/var/lib/mysql
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      DB_NAME: db
-      DB_USER: root
-      DB_PASSWORD: 12345678
-      DB_HOST: db
-      DB_PORT: 3306
+      - storedb:/var/lib/mysql  
 
   phpmyadmin:
     image: phpmyadmin
+    container_name: phpmyadmin
     ports:
-      - "8080:8080"
+      - "8080:80"
     environment:
       PMA_ARBITRARY: 1
       PMA_HOST: db
       PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: 12345678
-    
-    
+
+  web:
+    image: store-app
+    container_name: django_web
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db  
+    environment:
+      - DB_NAME=store
+      - DB_USER=root
+      - DB_PASSWORD=12345678
+      - DB_HOST=db
+
 volumes:
   storedb:
-   
