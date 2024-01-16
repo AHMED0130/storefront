@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+    environment {
+        IMAGE_NAME = 'ahmed0130/store:1.0-snapshot'
+        EC2_INSTANCE_IP = '13.53.187.202'
+        LINODE_INSTANCE_IP='172.105.65.131'
+    }
+    stages {
+        stage('Test') {
+            steps {
+                script {
+                    echo "test the application......"
+                }
+            }
+        }
+        stage('Build image') {
+            steps {
+                script {
+                    echo "build the app image "
+
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'USERNAME', passwordVariable: 'PASS')]) {
+                        sh "docker build -t $IMAGE_NAME ."
+                        sh 'echo $PASS | docker login -u $USERNAME --password-stdin'
+                        sh "docker push $IMAGE_NAME"
+                    }
+                }
+            }
+        }
+        stage('Deploy to aws') {
+            steps {
+                script {
+                    echo "deploying the application to ec2 instance"
+                    def dockercmd="docker run -d -p 9000:8000 --name store ${IMAGE_NAME}"
+                    sshagent(['ec2-aws-server']) {
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_IP} ${dockercmd}"
+    
+                            }
+                }
+            }
+        }
+
+        stage('Deploy to linode') {
+            steps {
+                script {
+                    echo "deploying the application to linode instance"
+                    def dockercmd="docker run -d -p 9000:8000 --name store ${IMAGE_NAME}"
+                    sshagent(['linode-server']) {
+                        sh "ssh -o StrictHostKeyChecking=no root@${LINODE_INSTANCE_IP} ${dockercmd}"
+    
+                            }
+                }
+            }
+        }
+    }
+}

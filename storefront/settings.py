@@ -97,19 +97,11 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
     }
 }
 
-#        'NAME': 'store',  # Replace with your actual database name
-#        'USER': 'root',
-#        'PASSWORD': '12345678',
-#        'HOST': '127.0.0.1',
 
 
 
@@ -181,3 +173,5 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1)
 }
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '172.105.65.131','13.53.187.202']
