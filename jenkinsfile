@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     echo "deploying the application to ec2 instance"
-                    def dockercmd="docker run -d -p 9000:8000 --name store ${IMAGE_NAME}"
+                    def dockercmd="docker run -d -p 9000:8000 --name storefront ${IMAGE_NAME}"
                     sshagent(['ec2-aws-server']) {
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_IP} ${dockercmd}"
     
