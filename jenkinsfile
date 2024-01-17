@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'ahmed0130/store:3.0-snapshot'
+        IMAGE_NAME = 'ahmed0130/store:4.0-snapshot'
     }
     stages {
         stage('Test') {
@@ -30,11 +30,11 @@ pipeline {
                 script {
                     echo "deploying the application to ec2 instance......."
                     def shellscript="bash ./script.sh ${IMAGE_NAME}"
+                    def AWS_INSTANCE="ec2-user@13.51.162.88"
                     sshagent(['ec2-aws-server']) {
-                        sh "scp -o StrictHostKeyChecking=no docker-compose.yml ec2-user@16.171.137.39:/home/ec2-user"
-                        sh "scp -o StrictHostKeyChecking=no script.sh ec2-user@16.171.137.39:/home/ec2-user"
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@16.171.137.39 ${shellscript}"
-    
+                        sh "scp -o StrictHostKeyChecking=no docker-compose.yml ${AWS_INSTANCE}:/home/ec2-user"
+                        sh "scp -o StrictHostKeyChecking=no script.sh ${AWS_INSTANCE}:/home/ec2-user"
+                        sh "ssh -o StrictHostKeyChecking=no ${AWS_INSTANCE} ${shellscript}"
                             }
                 }
             }
