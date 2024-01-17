@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'ahmed0130/store:4.0-snapshot'
+        IMAGE_NAME = 'ahmed0130/store:5.0-snapshot'
     }
     stages {
         stage('Test') {
@@ -25,16 +25,16 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to aws') {
+        stage('Deploy to linode') {
             steps {
                 script {
-                    echo "deploying the application to ec2 instance......."
+                    echo "deploying the application to linode instance......."
                     def shellscript="bash ./script.sh ${IMAGE_NAME}"
-                    def AWS_INSTANCE="ec2-user@13.51.162.88"
-                    sshagent(['ec2-aws-server']) {
-                        sh "scp -o StrictHostKeyChecking=no docker-compose.yml ${AWS_INSTANCE}:/home/ec2-user"
-                        sh "scp -o StrictHostKeyChecking=no script.sh ${AWS_INSTANCE}:/home/ec2-user"
-                        sh "ssh -o StrictHostKeyChecking=no ${AWS_INSTANCE} ${shellscript}"
+                    def LINODE_INSTANCE="root@172.104.252.70"
+                    sshagent(['linode-server']) {
+                        sh "scp -o StrictHostKeyChecking=no docker-compose.yml ${LINODE_INSTANCE}:/root"
+                        sh "scp -o StrictHostKeyChecking=no script.sh ${LINODE_INSTANCE}:/root"
+                        sh "ssh -o StrictHostKeyChecking=no ${LINODE_INSTANCE} ${shellscript}"
                             }
                 }
             }
