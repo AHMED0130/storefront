@@ -26,20 +26,33 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to aws') {
-            steps {
-                script {
-                    echo "deploying the application to ec2 instance......."
-                    def shellscript="bash ./script.sh ${IMAGE_NAME}"
-                    sshagent(['ec2-aws-server']) {
-                        sh "scp docker-compose.yml ${EC2_INSTANCE}:/home/ec2-user"
-                        sh "scp script.sh ${EC2_INSTANCE}:/home/ec2-user"
-                        sh "ssh -o StrictHostKeyChecking=no ${EC2_INSTANCE} ${shellscript}"
-    
-                            }
-                }
+      stage('Deploy to AWS') {
+    steps {
+        script {
+            echo "Deploying the application to EC2 instance..."
+
+            // Set the EC2 instance IP address
+            def EC2_INSTANCE = 'ec2-user@16.171.137.39'
+
+            // Define the shell script to be executed on the remote EC2 instance
+            def shellscript = "bash ./script.sh ${IMAGE_NAME}"
+
+            // Create a temporary known_hosts file
+            def knownHostsFile = "${JENKINS_HOME}/workspace/storefront@tmp/known_hosts"
+            sh "ssh-keyscan -t rsa ${EC2_INSTANCE} > ${knownHostsFile}"
+
+            // Copy Docker Compose file and script to EC2 instance
+            sshagent(['ec2-aws-server']) {
+                sh "scp -o StrictHostKeyChecking=no -i /var/jenkins_home/workspace/storefront@tmp/private_key_11451060673644021593.key docker-compose.yml ${EC2_INSTANCE}:/home/ec2-user"
+                sh "scp -o StrictHostKeyChecking=no -i /var/jenkins_home/workspace/storefront@tmp/private_key_11451060673644021593.key script.sh ${EC2_INSTANCE}:/home/ec2-user"
+
+                // SSH into EC2 instance and run the script
+                sh "ssh -o StrictHostKeyChecking=no -i /var/jenkins_home/workspace/storefront@tmp/private_key_11451060673644021593.key ${EC2_INSTANCE} ${shellscript}"
             }
         }
+    }
+}
+
 
     }
 }
