@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'ahmed0130/store:5.0-snapshot'
+        IMAGE_NAME = 'ahmed0130/store:latest'
     }
     stages {
         stage('Test') {
