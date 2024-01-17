@@ -25,7 +25,7 @@ pipeline {
                 }
             }
         }
- stage('Deploy to aws') {
+        stage('Deploy to aws') {
             steps {
                 script {
                     echo "deploying the application to ec2 instance......."
