@@ -1,9 +1,8 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'ahmed0130/store:2.0-snapshot'
-        EC2_INSTANCE_IP = '13.53.187.202'
-        LINODE_INSTANCE_IP='172.105.65.131'
+        IMAGE_NAME = 'ahmed0130/store:4.0-snapshot'
+        EC2_INSTANCE = 'ec2-user@16.171.137.39'
     }
     stages {
         stage('Test') {
@@ -30,10 +29,12 @@ pipeline {
         stage('Deploy to aws') {
             steps {
                 script {
-                    echo "deploying the application to ec2 instance"
-                    def dockercmd="docker run -d -p 9000:8000 --name storefront ${IMAGE_NAME}"
+                    echo "deploying the application to ec2 instance......."
+                    def shellscript="bash ./script.sh ${IMAGE_NAME}"
                     sshagent(['ec2-aws-server']) {
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_IP} ${dockercmd}"
+                        sh "scp docker-compose.yml ${EC2_INSTANCE}:/home/ec2-user"
+                        sh "scp script.sh ${EC2_INSTANCE}:/home/ec2-user"
+                        sh "ssh -o StrictHostKeyChecking=no ${EC2_INSTANCE} ${shellscript}"
     
                             }
                 }

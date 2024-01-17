@@ -6,6 +6,7 @@ services:
     image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: store
     ports:
       - "3306:3306"
     volumes:
@@ -23,7 +24,7 @@ services:
       MYSQL_ROOT_PASSWORD: 12345678
 
   web:
-    image: store-app
+    image: ${IMAGE}
     container_name: django_web
     ports:
       - "8000:8000"
