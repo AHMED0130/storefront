@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'ahmed0130/store:4.0-snapshot'
+        IMAGE_NAME = 'ahmed0130/store:3.0-snapshot'
         EC2_INSTANCE = 'ec2-user@16.171.137.39'
     }
     stages {
