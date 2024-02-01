@@ -174,4 +174,4 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1)
 }
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '172.104.252.70']
+ALLOWED_HOSTS = ['*']
