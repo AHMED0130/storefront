@@ -2,3 +2,8 @@
 *.sqlite3
 venv/
 Dockerfile
+.vscode/
+jenkinsfile
+.pytest_cache/
+README.md
+docker-compose.yml
