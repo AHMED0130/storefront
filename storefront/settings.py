@@ -93,8 +93,7 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-
-
+#sqlite for testing purposes only
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -102,6 +101,16 @@ DATABASES = {
     }
 }
 
+#DATABASES = {
+#'default': {
+#    'ENGINE': 'django.db.backends.mysql',
+#    'NAME': 'store',
+#    'HOST': 'localhost',
+#    'PORT': '3306',
+#    'USER': 'root',
+#    'PASSWORD': '12345678',
+#    }
+#}
 
 
 
