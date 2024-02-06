@@ -52,7 +52,7 @@ pipeline {
             steps {
                 script {
                     echo "deploying the application to linode instance..........."
-                    def dockercmd = "docker run -d -p 8000:8000 --name todo ${IMAGE_NAME}"
+                    def dockercmd = "docker run -d -p 8000:8000  ${IMAGE_NAME}"
                     sshagent(['linode-server']) {
                         sh "ssh -o StrictHostKeyChecking=no root@${LINODE_INSTANCE_IP} ${dockercmd}"
                     }
@@ -64,7 +64,7 @@ pipeline {
             steps {
                 script {
                     echo "deploying the application to ec2 instance............"
-                    def dockercmd = "docker run -d -p 8000:8000 --name todo ${IMAGE_NAME}"
+                    def dockercmd = "docker run -d -p 8000:8000  ${IMAGE_NAME}"
                     sshagent(['aws-server']) {
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_IP} ${dockercmd}"
                     }
