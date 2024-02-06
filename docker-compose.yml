@@ -24,7 +24,7 @@ services:
       MYSQL_ROOT_PASSWORD: 12345678
 
   web:
-    image: ${IMAGE}
+    image: public.ecr.aws/b0f1t0a7/store:1.0
     container_name: app
     ports:
       - "8000:8000"
