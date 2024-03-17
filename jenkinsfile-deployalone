@@ -22,7 +22,7 @@ pipeline {
                 script {
                     echo "test the application......"
                     sh """
-                        . /var/jenkins_home/workspace/storefront/venv/bin/activate
+                        . /var/jenkins_home/workspace/${JOB_NAME}/venv/bin/activate
                         pip install -r requirements.txt
                         python manage.py migrate 
                         pytest
