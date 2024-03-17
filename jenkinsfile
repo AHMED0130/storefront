@@ -16,7 +16,7 @@ pipeline {
                 script {
                     echo "build the app image "
 
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials',
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub',
                         usernameVariable: 'USERNAME', passwordVariable: 'PASS')]) {
                         sh "docker build -t $IMAGE_NAME ."
                         sh 'echo $PASS | docker login -u $USERNAME --password-stdin'
@@ -27,9 +27,12 @@ pipeline {
         }
         stage('Deploy to linode') {
             steps {
+                    environment {
+                        DOCKERHUB_CRED = credentials('dockerhub')
+                    }
                 script {
                     echo "deploying the application to linode instance......."
-                    def shellscript="bash ./script.sh ${IMAGE_NAME}"
+                    def shellscript="bash ./script.sh ${IMAGE_NAME} ${DOCKERHUB_CRED_USR} ${DOCKERHUB_CRED_PSW}"
                     def LINODE_INSTANCE="root@172.104.252.70"
                     sshagent(['linode-server']) {
                         sh "scp -o StrictHostKeyChecking=no docker-compose.yml ${LINODE_INSTANCE}:/root"
