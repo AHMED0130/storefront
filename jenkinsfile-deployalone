@@ -1,9 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = "ahmed0130/store:1.0.0-snapshot-${BUILD_NUMBER}"
-        EC2_INSTANCE_IP = '16.171.181.100'
-        LINODE_INSTANCE_IP = '139.162.178.127'
+        IMAGE_NAME = "ahmed0130/store:1.1.0-snapshot-${BUILD_NUMBER}"
     }
 
     stages {
@@ -38,7 +36,7 @@ pipeline {
                 script {
                     echo "build the app image "
 
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials',
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub',
                             usernameVariable: 'USERNAME', passwordVariable: 'PASS')]) {
                         sh "docker build -t $IMAGE_NAME ."
                         sh 'echo $PASS | docker login -u $USERNAME --password-stdin'
@@ -48,13 +46,20 @@ pipeline {
             }
         }
 
-        stage('Deploy to linode') {
+        stage('provision ec2-server') {
+            environment {
+            AWS_ACCESS_KEY_ID = credentials('aws_access_key')
+            AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
+                }
             steps {
                 script {
-                    echo "deploying the application to linode instance..........."
-                    def dockercmd = "docker run -d -p 8080:8000  ${IMAGE_NAME}"
-                    sshagent(['linode-server']) {
-                        sh "ssh -o StrictHostKeyChecking=no root@${LINODE_INSTANCE_IP} ${dockercmd}"
+                    dir('terraform') {                   
+                        sh "terraform init"
+                        sh "terraform apply -auto-approve"
+                        EC2_PUBLIC_IP = sh(
+                            script: "terraform ouput public_ip" ,
+                            returnStdout : true             
+                        ).trim()   
                     }
                 }
             }
@@ -66,7 +71,7 @@ pipeline {
                     echo "deploying the application to ec2 instance............"
                     def dockercmd = "docker run -d -p 8080:8000  ${IMAGE_NAME}"
                     sshagent(['aws-server']) {
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_IP} ${dockercmd}"
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP} ${dockercmd}"
                     }
                 }
             }
