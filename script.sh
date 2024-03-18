@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 export IMAGE=$1
 export USERNAME=$2
 export PASS=$3
