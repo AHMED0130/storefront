@@ -1,5 +1,5 @@
 variable "security-group-name" {
-  default = "store-security-group"
+  default = "store2-security-group"
   
 }
 
