@@ -7,3 +7,4 @@ jenkinsfile
 .pytest_cache/
 README.md
 docker-compose.yml
+terraform/*
